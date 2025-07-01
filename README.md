@@ -1,73 +1,148 @@
-# Welcome to your Lovable project
+# **카페 주문 및 추천 시스템 - Lovable**
 
-## Project info
+## **프로젝트 개요**
 
-**URL**: https://lovable.dev/projects/e2663824-395f-4f44-827b-c4d606fbe65a
+이 프로젝트는 사용자가 다양한 카페를 탐색하고, 각 카페의 메뉴를 확인한 후 음료를 주문하고 결제할 수 있도록 돕는 시스템입니다. 이 시스템은 카페 선택과 음료 주문의 경험을 더 쉽게 하고, 사용자가 자신의 선호에 맞는 카페를 찾는 데 도움을 주는 것을 목표로 합니다.
 
-## How can I edit this code?
+### **배포 URL**
+- [카페 주문 시스템 - 배포 링크](https://aroma-seeker-app.lovable.app)
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## **페르소나**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e2663824-395f-4f44-827b-c4d606fbe65a) and start prompting.
+### **정찬호 (60세, 시니어 사용자)**
 
-Changes made via Lovable will be committed automatically to this repo.
+**목표**: 글자가 크고 쉬운 방식으로 앱을 이용하고 싶어, 키오스크나 앱에서 음료를 당황하지 않고 주문할 수 있도록 돕고자 합니다.
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### **이지윤 (20세, 카페인 중독자)**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+**목표**: 다양한 카페를 돌아다니며 포인트와 스탬프를 통합해 관리하고, 신메뉴 소식을 빠르게 받기를 원합니다.
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### **임준혁 (18세, 비커피·제로 음료 중시 사용자)**
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+**목표**: 제로 음료와 유당이 없는 대체 우유를 제공하는 카페를 쉽게 찾고 싶어, 내가 원하는 음료를 골라서 즐길 수 있습니다.
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+### **박지민 (25세, 인스타 감성 중시 사용자)**
 
-**Edit a file directly in GitHub**
+**목표**: 예쁘고 감성 있는 카페를 찾고 싶어, 인스타그램에 올릴 수 있는 사진을 찍을 수 있는 카페를 쉽게 찾고 싶습니다.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+### **김은지 (23세, 카공족 사용자)**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**목표**: 공부하기 좋은 카페를 찾고 싶어, 조용하고 집중할 수 있는 카페 환경을 갖춘 곳을 찾고자 합니다.
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## **사용자 스토리와 인수 조건**
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### **정찬호 (60세, 시니어 사용자)**
 
-## How can I deploy this project?
+**사용자 스토리**:  
+나는 나이가 많은 사용자로서, 글자가 크고 쉬운 방식으로 앱을 이용하고 싶다.  
+그래서 키오스크나 앱에서 음료를 당황하지 않고 주문할 수 있다.
 
-Simply open [Lovable](https://lovable.dev/projects/e2663824-395f-4f44-827b-c4d606fbe65a) and click on Share -> Publish.
+**인수 조건**:  
+- Given: 사용자가 앱에 로그인하고 카페 리스트를 확인 중입니다.  
+- When: 사용자가 ‘시니어 모드’를 설정합니다.  
+- Then: 글자가 기본보다 2배 커지고 고대비 테마가 적용됩니다.
 
-## Can I connect a custom domain to my Lovable project?
+### **이지윤 (20세, 카페인 중독자)**
 
-Yes, you can!
+**사용자 스토리**:  
+나는 다양한 카페를 돌아다니는 사용자로서, 포인트와 스탬프를 통합해서 관리하고 싶다.  
+그래서 적립과 사용을 쉽게 하고, 신메뉴 소식도 빠르게 받고 싶다.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+**인수 조건**:  
+- Given: 사용자가 앱에 로그인하고 제휴된 카페 목록을 보고 있습니다.  
+- When: 사용자가 포인트를 적립하고 스탬프를 자동으로 추가합니다.  
+- Then: 앱에서 통합된 포인트 내역을 확인할 수 있습니다.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### **임준혁 (18세, 비커피·제로 음료 중시 사용자)**
+
+**사용자 스토리**:  
+나는 음료 제한이 있는 사용자로서, 제로 음료나 유당이 없는 우유를 파는 카페만 찾고 싶다.  
+그래서 불편 없이 내 입맛에 맞는 음료를 고를 수 있다.
+
+**인수 조건**:  
+- Given: 사용자가 음료 필터 기능을 사용하여 카페를 검색 중입니다.  
+- When: 사용자가 ‘제로 음료’나 ‘유당불포함’ 필터를 설정합니다.  
+- Then: 필터링된 음료가 조건에 맞는 카페에서만 표시됩니다.
+
+### **박지민 (25세, 인스타 감성 중시 사용자)**
+
+**사용자 스토리**:  
+나는 SNS 활동을 많이 하는 사용자로서, 예쁘고 감성 있는 카페를 찾고 싶다.  
+그래서 사진을 찍고 인스타에 올려 좋아요를 많이 받고 싶다.
+
+**인수 조건**:  
+- Given: 사용자가 카페 목록에서 감성 카페를 찾고 있습니다.  
+- When: 사용자가 ‘감성 카페 필터’를 설정합니다.  
+- Then: 감성적인 조명, 인테리어, 플레이팅을 강조한 카페가 표시됩니다.
+
+### **김은지 (23세, 카공족 사용자)**
+
+**사용자 스토리**:  
+나는 공부를 하러 카페를 찾는 사용자로서, 조용하고 집중할 수 있는 환경의 카페만 찾고 싶다.  
+그래서 생산적인 시간을 보낼 수 있다.
+
+**인수 조건**:  
+- Given: 사용자가 카페 검색 화면을 보고 있습니다.  
+- When: 사용자가 ‘카공 필터’를 설정합니다.  
+- Then: 조용한 카페, 콘센트 및 Wi-Fi가 제공되는 카페만 표시됩니다.
+
+---
+
+## **기능 요구사항**
+
+### **1. 이미지 깨짐 문제 해결**
+- **요구사항**: 모든 이미지가 깨지지 않도록 하여 정상적으로 로드되며, 카페 및 음료 이미지가 적절한 크기로 표시됩니다.
+- **목표**: 이미지의 품질을 보장하고, 앱에서 고해상도 이미지가 깨짐 없이 제대로 표시되도록 합니다.
+
+### **2. 카페 목록 데이터 개선**
+- **요구사항**: 현재 카페 데이터가 너무 적습니다. 최소 20개 이상의 카페가 목록에 나타나도록 데이터 소스를 확장해야 합니다.
+- **목표**: 카페 데이터가 충분히 많아지도록 추가하고, 다양한 카페를 사용자가 선택할 수 있도록 해야 합니다.
+
+### **3. 프로필 페이지 이동 기능**
+- **요구사항**: 사용자가 프로필 페이지로 이동할 수 있는 버튼을 추가하여, 개인 정보나 설정을 쉽게 확인하고 수정할 수 있도록 해야 합니다.
+- **목표**: 프로필 버튼을 통해 사용자 정보를 손쉽게 수정하고 볼 수 있게 만듭니다.
+
+### **4. 카페 메뉴 및 주문 기능**
+- **요구사항**: 사용자가 카페를 클릭했을 때 해당 카페의 메뉴를 확인하고 음료를 주문 및 결제할 수 있도록 해야 합니다.
+- **목표**: 카페를 클릭하면 해당 카페의 메뉴와 주문 버튼이 정상적으로 표시되고, 주문 후 결제까지 원활하게 진행됩니다.
+
+### **5. 디자인 및 색상 개선**
+- **요구사항**: 전체적인 디자인과 색상이 현대적이고 직관적으로 개선되어야 합니다.
+- **목표**: 세련되고 사용자가 편리하게 사용할 수 있는 UI 디자인으로 업데이트합니다.
+
+### **6. 로고 및 사이트 이름 표시**
+- **요구사항**: 로고 부분에 해당 사이트의 로고와 이름을 명확하게 표시해야 합니다.
+- **목표**: 사이트의 상단에 로고와 이름이 명확하게 표시되도록 합니다.
+
+### **7. 시니어 모드와 음성 안내 기능 접근성 개선**
+- **요구사항**: 시니어 모드와 음성 안내 기능을 더 쉽게 설정할 수 있도록, 이모티콘을 누르지 않고 화면 어디에서나 접근할 수 있도록 해야 합니다.
+- **목표**: 시니어 모드와 음성 안내 기능을 쉽게 사용할 수 있도록 설정 항목을 접근 가능한 위치에 배치합니다.
+
+### **8. 필터 버튼 디자인 변경**
+- **요구사항**: 필터 내 버튼을 체크박스가 아닌 카드형식(네모 카드 형태)으로 변경하여 사용자가 직관적으로 필터를 선택할 수 있도록 해야 합니다.
+- **목표**: 필터 버튼을 카드형식으로 변경하여 시각적으로 더욱 직관적이고 사용하기 쉽게 만듭니다.
+
+### **9. 카페 검색 기능 고도화**
+- **요구사항**: 카페 검색 기능을 고도화하여, 사용자가 원하는 카페를 빠르고 정확하게 찾을 수 있도록 필터링 옵션을 추가해야 합니다.
+- **목표**: 가격대, 지역, 분위기, 메뉴 종류 등 다양한 검색 옵션을 제공하여, 사용자가 원하는 카페를 쉽게 찾을 수 있도록 합니다.
+
+---
+
+## **사용자 경험 흐름**
+
+1. **앱 실행**: 사용자는 앱을 실행하여 카페 목록을 확인합니다. 기본적으로 다양한 카페가 목록에 표시됩니다.
+2. **필터링 및 검색**: 사용자는 검색 필터를 사용하여 자신이 원하는 카페를 찾아볼 수 있습니다.
+3. **카페 클릭**: 원하는 카페를 클릭하면, 해당 카페의 메뉴와 음료 옵션이 표시됩니다.
+4. **음료 선택 및 주문**: 사용자는 음료를 선택하고 주문합니다. 결제 버튼을 눌러 결제를 완료합니다.
