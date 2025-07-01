@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { Volume2, Eye, Accessibility } from 'lucide-react';
+import { Volume2, Eye, Accessibility, Settings } from 'lucide-react';
 
 interface SettingsModalProps {
   isOpen: boolean;
