@@ -2,15 +2,16 @@
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, MapPin } from 'lucide-react';
+import { Search, MapPin, Filter } from 'lucide-react';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
   onLocationSearch: () => void;
+  onAdvancedSearch: () => void;
   seniorMode: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onLocationSearch, seniorMode }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onLocationSearch, onAdvancedSearch, seniorMode }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -36,6 +37,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onLocationSearch, senio
         </Button>
         <Button variant="outline" size="icon" onClick={onLocationSearch}>
           <MapPin className="h-4 w-4" />
+        </Button>
+        <Button variant="outline" size="icon" onClick={onAdvancedSearch}>
+          <Filter className="h-4 w-4" />
         </Button>
       </form>
     </div>

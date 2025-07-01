@@ -2,14 +2,25 @@
 import React from 'react';
 import { Bell, User, Settings, Coffee } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
   seniorMode: boolean;
-  onProfileClick: () => void;
+  onProfileClick?: () => void;
   onSettingsClick: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ seniorMode, onProfileClick, onSettingsClick }) => {
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    if (onProfileClick) {
+      onProfileClick();
+    } else {
+      navigate('/profile');
+    }
+  };
+
   return (
     <header className={`bg-white shadow-lg border-b border-amber-200 ${seniorMode ? 'senior-mode' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ seniorMode, onProfileClick, onSettingsC
               <Settings className="h-5 w-5 text-gray-600" />
             </Button>
             
-            <Button variant="ghost" size="icon" onClick={onProfileClick} className="hover:bg-amber-50">
+            <Button variant="ghost" size="icon" onClick={handleProfileClick} className="hover:bg-amber-50">
               <User className="h-5 w-5 text-gray-600" />
             </Button>
           </div>

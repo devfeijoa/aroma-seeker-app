@@ -6,6 +6,8 @@ import CafeCard from '@/components/CafeCard';
 import FilterModal from '@/components/FilterModal';
 import SettingsModal from '@/components/SettingsModal';
 import CafeMenuModal from '@/components/CafeMenuModal';
+import AccessibilityBar from '@/components/AccessibilityBar';
+import AdvancedSearch from '@/components/AdvancedSearch';
 import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
@@ -14,6 +16,7 @@ const Index = () => {
   const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [menuModalOpen, setMenuModalOpen] = useState(false);
+  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
   const [selectedCafe, setSelectedCafe] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const { toast } = useToast();
@@ -263,6 +266,19 @@ const Index = () => {
     }
   ];
 
+  // 시니어 모드 토글 핸들러
+  const handleSeniorModeToggle = (enabled: boolean) => {
+    setSeniorMode(enabled);
+    localStorage.setItem('seniorMode', enabled.toString());
+    window.location.reload(); // 전체 앱에 변경사항 적용
+  };
+
+  // 음성 토글 핸들러
+  const handleVoiceToggle = (enabled: boolean) => {
+    setVoiceEnabled(enabled);
+    localStorage.setItem('voiceEnabled', enabled.toString());
+  };
+
   // Load settings from localStorage
   useEffect(() => {
     const savedSeniorMode = localStorage.getItem('seniorMode') === 'true';
@@ -302,6 +318,17 @@ const Index = () => {
       toast({
         title: "음성 안내",
         description: `${query}을(를) 검색합니다.`,
+      });
+    }
+  };
+
+  const handleAdvancedSearch = (searchFilters: any) => {
+    console.log('Advanced search filters:', searchFilters);
+    
+    if (voiceEnabled) {
+      toast({
+        title: "음성 안내",
+        description: "고급 검색을 실행합니다.",
       });
     }
   };
@@ -354,13 +381,13 @@ const Index = () => {
     <div className={`min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 ${seniorMode ? 'senior-mode' : ''}`}>
       <Header
         seniorMode={seniorMode}
-        onProfileClick={() => toast({ title: "프로필", description: "프로필 페이지로 이동합니다." })}
         onSettingsClick={() => setSettingsModalOpen(true)}
       />
       
       <SearchBar
         onSearch={handleSearch}
         onLocationSearch={handleLocationSearch}
+        onAdvancedSearch={() => setAdvancedSearchOpen(true)}
         seniorMode={seniorMode}
       />
       
@@ -404,6 +431,14 @@ const Index = () => {
         )}
       </main>
       
+      {/* 접근성 바 - 화면 우하단에 고정 */}
+      <AccessibilityBar
+        seniorMode={seniorMode}
+        voiceEnabled={voiceEnabled}
+        onSeniorModeToggle={handleSeniorModeToggle}
+        onVoiceToggle={handleVoiceToggle}
+      />
+      
       <FilterModal
         isOpen={filterModalOpen}
         onClose={() => setFilterModalOpen(false)}
@@ -417,9 +452,16 @@ const Index = () => {
         isOpen={settingsModalOpen}
         onClose={() => setSettingsModalOpen(false)}
         seniorMode={seniorMode}
-        onSeniorModeToggle={setSeniorMode}
+        onSeniorModeToggle={handleSeniorModeToggle}
         voiceEnabled={voiceEnabled}
-        onVoiceToggle={setVoiceEnabled}
+        onVoiceToggle={handleVoiceToggle}
+      />
+      
+      <AdvancedSearch
+        isOpen={advancedSearchOpen}
+        onClose={() => setAdvancedSearchOpen(false)}
+        onSearch={handleAdvancedSearch}
+        seniorMode={seniorMode}
       />
       
       {selectedCafe && (
