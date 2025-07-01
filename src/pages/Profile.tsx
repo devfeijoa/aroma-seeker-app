@@ -171,8 +171,8 @@ const Profile = () => {
                   <p className="text-sm text-muted-foreground">쿠폰</p>
                 </div>
               </div>
-            </Card>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* 자주 주문하는 메뉴 */}
