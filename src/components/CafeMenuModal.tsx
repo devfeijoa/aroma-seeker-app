@@ -22,13 +22,21 @@ interface CafeMenuModalProps {
   onClose: () => void;
   cafe: any;
   seniorMode: boolean;
+  onAddToCart: (item: {
+    id: string;
+    name: string;
+    price: number;
+    cafeName: string;
+    image: string;
+  }) => void;
 }
 
 const CafeMenuModal: React.FC<CafeMenuModalProps> = ({
   isOpen,
   onClose,
   cafe,
-  seniorMode
+  seniorMode,
+  onAddToCart
 }) => {
   const { toast } = useToast();
   const [cart, setCart] = useState<{[key: string]: number}>({});
@@ -91,11 +99,23 @@ const CafeMenuModal: React.FC<CafeMenuModalProps> = ({
   const categories = ['커피', '음료', '디저트'];
   const filteredItems = menuItems.filter(item => item.category === selectedCategory);
 
-  const addToCart = (itemId: string) => {
+  const addToCartLocal = (itemId: string) => {
     setCart(prev => ({
       ...prev,
       [itemId]: (prev[itemId] || 0) + 1
     }));
+
+    // Add to global cart
+    const item = menuItems.find(m => m.id === itemId);
+    if (item) {
+      onAddToCart({
+        id: `${cafe.id}-${item.id}`,
+        name: item.name,
+        price: item.price,
+        cafeName: cafe.name,
+        image: item.image
+      });
+    }
   };
 
   const removeFromCart = (itemId: string) => {
@@ -234,7 +254,7 @@ const CafeMenuModal: React.FC<CafeMenuModalProps> = ({
                           )}
                           <Button
                             size="sm"
-                            onClick={() => addToCart(item.id)}
+                            onClick={() => addToCartLocal(item.id)}
                             className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700"
                           >
                             <Plus className="h-3 w-3" />

@@ -2,7 +2,10 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Slider } from '@/components/ui/slider';
 import { Separator } from '@/components/ui/separator';
+import { MapPin, Clock } from 'lucide-react';
 
 interface FilterGroup {
   title: string;
@@ -21,6 +24,10 @@ interface FilterModalProps {
   onFilterToggle: (filterId: string) => void;
   onResetFilters: () => void;
   seniorMode: boolean;
+  distanceRange: number[];
+  onDistanceChange: (range: number[]) => void;
+  showOpenOnly: boolean;
+  onOpenOnlyToggle: () => void;
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({
@@ -29,7 +36,11 @@ const FilterModal: React.FC<FilterModalProps> = ({
   filterGroups,
   onFilterToggle,
   onResetFilters,
-  seniorMode
+  seniorMode,
+  distanceRange,
+  onDistanceChange,
+  showOpenOnly,
+  onOpenOnlyToggle
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -41,6 +52,60 @@ const FilterModal: React.FC<FilterModalProps> = ({
         </DialogHeader>
         
         <div className="space-y-6 max-h-96 overflow-y-auto">
+          {/* 거리 필터 */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3 text-gray-800 flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              거리 설정
+            </h3>
+            <div className="space-y-3">
+              <div className="px-3">
+                <Slider
+                  value={distanceRange}
+                  onValueChange={onDistanceChange}
+                  max={2000}
+                  min={100}
+                  step={100}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>{distanceRange[0]}m</span>
+                <span>{distanceRange[1]}m</span>
+              </div>
+              <Badge variant="outline" className="w-full justify-center">
+                {distanceRange[0]}m ~ {distanceRange[1]}m 범위
+              </Badge>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* 영업시간 필터 */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3 text-gray-800 flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              영업 상태
+            </h3>
+            <div
+              onClick={onOpenOnlyToggle}
+              className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                showOpenOnly
+                  ? 'border-amber-500 bg-amber-50'
+                  : 'border-gray-200 bg-white hover:border-amber-300'
+              }`}
+            >
+              <div className="text-center">
+                <div className="text-2xl mb-2">🕐</div>
+                <div className="text-sm font-medium text-gray-700">
+                  영업 중인 카페만
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
           {filterGroups.map((group, groupIndex) => (
             <div key={groupIndex}>
               <h4 className="font-semibold mb-4 text-lg text-gray-800">{group.title}</h4>

@@ -8,7 +8,19 @@ import SettingsModal from '@/components/SettingsModal';
 import CafeMenuModal from '@/components/CafeMenuModal';
 import AccessibilityBar from '@/components/AccessibilityBar';
 import AdvancedSearch from '@/components/AdvancedSearch';
+import Cart from '@/components/Cart';
+import OrderConfirmationModal from '@/components/OrderConfirmationModal';
+import SortDropdown from '@/components/SortDropdown';
 import { useToast } from '@/hooks/use-toast';
+
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  cafeName: string;
+  image: string;
+}
 
 const Index = () => {
   const [seniorMode, setSeniorMode] = useState(false);
@@ -19,6 +31,12 @@ const Index = () => {
   const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
   const [selectedCafe, setSelectedCafe] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [cartOpen, setCartOpen] = useState(false);
+  const [orderConfirmOpen, setOrderConfirmOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [sortBy, setSortBy] = useState('distance');
+  const [distanceRange, setDistanceRange] = useState([100, 1000]);
+  const [showOpenOnly, setShowOpenOnly] = useState(false);
   const { toast } = useToast();
 
   // 확장된 카페 데이터 (Unsplash 이미지 사용)
@@ -353,29 +371,116 @@ const Index = () => {
     }
   };
 
-  const filteredCafes = cafes.filter(cafe => {
-    const activeFilterIds = filters.filter(f => f.active).map(f => f.id);
-    if (activeFilterIds.length === 0) return true;
+  // Cart functions
+  const addToCart = (item: Omit<CartItem, 'quantity'>) => {
+    setCartItems(prev => {
+      const existing = prev.find(cartItem => cartItem.id === item.id);
+      if (existing) {
+        return prev.map(cartItem =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        );
+      }
+      return [...prev, { ...item, quantity: 1 }];
+    });
+  };
+
+  const updateCartQuantity = (itemId: string, quantity: number) => {
+    if (quantity === 0) {
+      setCartItems(prev => prev.filter(item => item.id !== itemId));
+    } else {
+      setCartItems(prev =>
+        prev.map(item =>
+          item.id === itemId ? { ...item, quantity } : item
+        )
+      );
+    }
+  };
+
+  const removeFromCart = (itemId: string) => {
+    setCartItems(prev => prev.filter(item => item.id !== itemId));
+  };
+
+  const handleCartCheckout = () => {
+    if (cartItems.length === 0) return;
+    setCartOpen(false);
+    setOrderConfirmOpen(true);
+  };
+
+  const handleConfirmOrder = (pickupTime: string) => {
+    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const cafeNames = [...new Set(cartItems.map(item => item.cafeName))];
     
-    return activeFilterIds.some(filterId => {
-      switch (filterId) {
-        case 'study':
-          return cafe.tags.includes('카공족');
-        case 'aesthetic':
-          return cafe.tags.includes('감성 카페') || cafe.tags.includes('SNS 핫플');
-        case 'zero':
-          return cafe.tags.includes('제로 음료');
-        case 'dessert':
-          return cafe.tags.includes('디저트');
-        case 'wifi':
-          return cafe.specialFeatures.includes('wifi');
-        case 'power':
-          return cafe.specialFeatures.includes('power');
+    toast({
+      title: "주문 완료",
+      description: `${cafeNames.join(', ')}에서 ${totalPrice.toLocaleString()}원 주문이 완료되었습니다. 픽업 시간: ${pickupTime}`,
+    });
+    
+    setCartItems([]);
+    setOrderConfirmOpen(false);
+  };
+
+  // Filtering and sorting
+  const getDistanceValue = (distance: string) => {
+    return parseInt(distance.replace(/[^\d]/g, ''));
+  };
+
+  const filteredAndSortedCafes = cafes
+    .filter(cafe => {
+      // Search query filter
+      if (searchQuery && !cafe.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+        return false;
+      }
+
+      // Distance filter
+      const cafeDistance = getDistanceValue(cafe.distance);
+      if (cafeDistance < distanceRange[0] || cafeDistance > distanceRange[1]) {
+        return false;
+      }
+
+      // Open only filter
+      if (showOpenOnly && !cafe.isOpen) {
+        return false;
+      }
+
+      // Active filters
+      const activeFilterIds = filters.filter(f => f.active).map(f => f.id);
+      if (activeFilterIds.length === 0) return true;
+      
+      return activeFilterIds.some(filterId => {
+        switch (filterId) {
+          case 'study':
+            return cafe.tags.includes('카공족');
+          case 'aesthetic':
+            return cafe.tags.includes('감성 카페') || cafe.tags.includes('SNS 핫플');
+          case 'zero':
+            return cafe.tags.includes('제로 음료');
+          case 'dessert':
+            return cafe.tags.includes('디저트');
+          case 'wifi':
+            return cafe.specialFeatures.includes('wifi');
+          case 'power':
+            return cafe.specialFeatures.includes('power');
+          default:
+            return false;
+        }
+      });
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'distance':
+          return getDistanceValue(a.distance) - getDistanceValue(b.distance);
+        case 'rating':
+          return b.rating - a.rating;
+        case 'status':
+          return b.isOpen === a.isOpen ? 0 : b.isOpen ? 1 : -1;
+        case 'name':
+          return a.name.localeCompare(b.name);
         default:
-          return false;
+          return 0;
       }
     });
-  });
 
   return (
     <div className={`min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 ${seniorMode ? 'senior-mode' : ''}`}>
@@ -400,16 +505,25 @@ const Index = () => {
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-6">
-          <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-amber-800 to-orange-700 bg-clip-text text-transparent">
-            주변 카페
-          </h2>
-          <p className="text-gray-600 text-lg">
-            {filteredCafes.length}개의 카페를 찾았습니다
-          </p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-amber-800 to-orange-700 bg-clip-text text-transparent">
+                주변 카페
+              </h2>
+              <p className="text-gray-600 text-lg">
+                {filteredAndSortedCafes.length}개의 카페를 찾았습니다
+              </p>
+            </div>
+            <SortDropdown
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+              seniorMode={seniorMode}
+            />
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredCafes.map((cafe) => (
+          {filteredAndSortedCafes.map((cafe) => (
             <CafeCard
               key={cafe.id}
               cafe={cafe}
@@ -419,7 +533,7 @@ const Index = () => {
           ))}
         </div>
         
-        {filteredCafes.length === 0 && (
+        {filteredAndSortedCafes.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-xl mb-2">
               선택한 조건에 맞는 카페가 없습니다.
@@ -446,6 +560,10 @@ const Index = () => {
         onFilterToggle={handleFilterToggle}
         onResetFilters={handleResetFilters}
         seniorMode={seniorMode}
+        distanceRange={distanceRange}
+        onDistanceChange={setDistanceRange}
+        showOpenOnly={showOpenOnly}
+        onOpenOnlyToggle={() => setShowOpenOnly(!showOpenOnly)}
       />
       
       <SettingsModal
@@ -470,8 +588,26 @@ const Index = () => {
           onClose={() => setMenuModalOpen(false)}
           cafe={selectedCafe}
           seniorMode={seniorMode}
+          onAddToCart={addToCart}
         />
       )}
+
+      <Cart
+        items={cartItems}
+        onUpdateQuantity={updateCartQuantity}
+        onRemoveItem={removeFromCart}
+        onCheckout={handleCartCheckout}
+        isOpen={cartOpen}
+        onOpenChange={setCartOpen}
+      />
+
+      <OrderConfirmationModal
+        isOpen={orderConfirmOpen}
+        onClose={() => setOrderConfirmOpen(false)}
+        items={cartItems}
+        onConfirmOrder={handleConfirmOrder}
+        seniorMode={seniorMode}
+      />
     </div>
   );
 };
